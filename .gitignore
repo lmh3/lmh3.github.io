@@ -1,0 +1,7 @@
+composer.lock
+*\.swp
+*.css.map
+cache/
+.DS_Store
+.sass-cache/
+_site/
