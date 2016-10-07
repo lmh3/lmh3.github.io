@@ -1,12 +1,12 @@
 ### Site info:
 title: lmh3 Page 
-tagline: Another Jekyll theme, Freshman twenty-first
-author: menghualu 
+tagline: Stay hungry. Stay foolish.
+author: MenghuaLu 
 email: lmh31415@gmail.com
-description: "MenghuaLu Bolg Page" # You can edit this line in _config.yml. It will appear in your document head meta and in your feed.xml site description
+description: "MenghuaLu Page"
 keywords: ""
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "" # the base hostname & protocol for your site
+baseurl: ""
+url: ""
 locale: en_US
 
 ### Personal info and site tools info:
@@ -15,8 +15,6 @@ github_username:  lmh3
 favicon:     "/images/favicon.ico"
 aboutme: Hi, this is MenghuaLu. I made this blog to write something. Please enjoy it.
 aboutme_photo: "/images/aboutme.png" 
-google_analytics_key: UA-57979084-1 # put YOUR key here to enable tracking! (blank to disable)
-
 
 ### Site setting:
 ShowContactInfo: "True" # Personal Info (twitter,github,email) can be seen on aboutme-sidebar, those info only shown where ShowContactInfo == True
@@ -56,7 +54,6 @@ locales:
 
 ### Build settings
 markdown: kramdown
-#markdown: redcarpet 
 #highlighter: pygments
 kramdown:
         input: GFM
