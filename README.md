@@ -1,3 +1,3 @@
-GitHub Page
+GitHub Pages
 ==========
-My GitHub Page: http://lmhrun.com
+My GitHub Pages: http://lmhrun.com
