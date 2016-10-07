@@ -56,6 +56,7 @@ locales:
 
 ### Build settings
 markdown: kramdown
+#markdown: redcarpet 
 #highlighter: pygments
 kramdown:
         input: GFM
