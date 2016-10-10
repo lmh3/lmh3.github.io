@@ -8,7 +8,7 @@ tags:
 description: 面试题 
 ---
 
-### 二叉树
+### 二叉树 
 
 #### 基础
 
@@ -69,45 +69,77 @@ description: 面试题
 4. kill -9、cpu load的作用
 5. 磁盘满了找出最大的文件
 6. awk sed
+7. [如何查看一个端口被什么进程占用？](#netstat)
+8. [文件系统软连接和硬连接的区别](#link) 
+9. [写脚本实现，可以用shell、perl等。在目录/tmp下找到100个以abc开头的文件，然后把这些文件的第一行保存到文件new中。](#findFile)
 
 
-### 实现实例
+
+### 实现示例
 
 <span id = "levenshtein">字符串编辑距离：</span>
 
-```
-int EditDistance(char *pSource, char *pTarget)
-{
-    int srcLength = strlen(pSource);
-    int targetLength = strlen(pTarget);
-    int i, j;
-    //dp[i][j]表示源串source[0-i)和目标串target[0-j)的编辑距离
-    //边界dp[i][0] = i，dp[0][j] = j  
-    for (i = 1; i <= srcLength; ++i)
-    {
-        dp[i][0] = i;
+{% highlight Java %}
+
+public static int getLevenshteinDistance(String s, String t) {
+    if (s == null || t == null) {
+        throw new IllegalArgumentException("Strings must not be null");
     }
-    for (j = 1; j <= targetLength; ++j)
-    {
-        dp[0][j] = j;
+    int n = s.length(); // length of s
+    int m = t.length(); // length of t
+
+    if (n == 0) {
+        return m;
+    } else if (m == 0) {
+        return n;
     }
-    for (i = 1; i <= srcLength; ++i)
-    {
-        for (j = 1; j <= targetLength; ++j)
-        {
-            if (pSource[i - 1] == pTarget[j - 1])
-            {
-                dp[i][j] = dp[i - 1][j - 1];
-            }
-            else
-            {
-                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1]);
-            }
+
+    if (n > m) {
+        // swap the input strings to consume less memory
+        String tmp = s;
+        s = t;
+        t = tmp;
+        n = m;
+        m = t.length();
+    }
+
+    int p[] = new int[n+1]; //'previous' cost array, horizontally
+    int d[] = new int[n+1]; // cost array, horizontally
+    int _d[]; //placeholder to assist in swapping p and d
+
+    // indexes into strings s and t
+    int i; // iterates through s
+    int j; // iterates through t
+
+    char t_j; // jth character of t
+
+    int cost; // cost
+
+    for (i = 0; i<=n; i++) {
+        p[i] = i;
+    }
+
+    for (j = 1; j<=m; j++) {
+        t_j = t.charAt(j-1);
+        d[0] = j;
+
+        for (i=1; i<=n; i++) {
+            cost = s.charAt(i-1)==t_j ? 0 : 1;
+            // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
+            d[i] = Math.min(Math.min(d[i-1]+1, p[i]+1),  p[i-1]+cost);
         }
+
+        // copy current distance counts to 'previous row' distance counts
+        _d = p;
+        p = d;
+        d = _d;
     }
-    return dp[srcLength][targetLength];
+
+    // our last action in the above loop was to switch d and p, so p now
+    // actually has the most recent cost counts
+    return p[n];
 }
-```
+{% endhighlight %}
 
 <span id = "replacestr">交替字符串：</span>
 
@@ -143,3 +175,30 @@ public boolean IsInterleave(String s1, String 2, String 3){
 }
 ```
 
+<span id = "findFile">文件查找整合：</span>
+
+```
+参考答案1：
+#!/bin/sh 
+for filename in `find /tmp -type f -name "abc*"|head -n 100` ;do 
+sed -n '1p' $filename>>new 
+done
+参考答案2：
+find /tmp -type f -name “abc*” | head -n 100 | xargs head -q -n 1 >> new
+```
+
+<span id = "link">软硬链接区别：</span>
+
+```
+硬连接：硬连接指通过索引节点来进行连接, 类似文件别名。
+  硬连接的作用是允许一个文件拥有多个有效路径名，删除源文件不影响硬连接
+软连接：另外一种连接称之为符号连接，类似于快捷方程式，包含的有另一文
+  件的位置信息，删除源文件软件连也无法访问了
+```
+
+<span id = "netstat">查看端口号：</span>
+
+
+```
+netstat -tunlp|grep 端口号
+```

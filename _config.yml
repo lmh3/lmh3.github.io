@@ -4,20 +4,20 @@ motto: "博学之，审问之，慎思之，明辨之，笃行之"
 author: "MenghuaLu"
 email: "lmh31415@gmail.com"
 description: "MenghuaLu Page"
-keywords: ""
 baseurl: ""
 url: ""
 locale: en_US
 
 ### Personal info and site tools info:
-twitter_username: "MenghuaLu"  
 github_username:  "lmh3"
+weibo_id: "lmh3"
+linkedin_id: "MenghuaLu"
 favicon:     "/images/favicon.ico"
 aboutme: "Hi, this is MenghuaLu. I made this blog to write something. Please enjoy it."
 aboutme_photo: "/images/aboutme.png" 
 
 ### Site setting:
-ShowContactInfo: "True" # Personal Info (twitter,github,email) can be seen on aboutme-sidebar, those info only shown where ShowContactInfo == True
+ShowContactInfo: "True" # Personal Info (github,email) can be seen on aboutme-sidebar, those info only shown where ShowContactInfo == True
 default_column: "two" # blog style: two columns, if default_column != "two", you will see a one column blog.
 default_locale: "cn" # blog sidebar language set, only include: English (en), Chinese (cn), Japanese (jp), Polish (pl), Korean (kr) and Russian (ru) 
 

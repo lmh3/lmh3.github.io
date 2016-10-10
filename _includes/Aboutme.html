@@ -8,14 +8,17 @@
 
   You can contact me via:<br/>
 
-  {% if site.email != empty %}
-  <a href="mailto:{{site.email}}" title="mailto: {{site.email}}">Email</a> /
-  {% endif %}
   {% if site.github_username != empty %}
   <a href="https://github.com/{{site.github_username}}" title="GithubID: {{site.github_username}}">Github</a> /
   {% endif %}
-  {% if site.twitter_username != empty %}
-  <a href="https://twitter.com/{{site.twitter_username}}" title="TwitterID: {{site.twitter_username}}">Twitter</a>
+  {% if site.email != empty %}
+  <a href="mailto:{{site.email}}" title="mailto: {{site.email}}">Email</a> /
+  {% endif %}
+  {% if site.linkedin_id != empty %}
+  <a href="http://www.linkedin.com/in/menghua-lu-852a226a" title="ID: {{site.linkedin_id}}">LindedIn</a> /
+  {% endif %}
+  {% if site.weibo_id != empty %}
+  <a href="http://weibo.com/876867761" title="ID: {{site.weibo_id}}">Weibo</a>
   {% endif %}
 
   {% endif %}
