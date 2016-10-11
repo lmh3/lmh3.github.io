@@ -31,13 +31,15 @@ description: 面试题
 1. [字符串编辑距离](https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/zh/05.02.md)
 2. [交替字符串](https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/zh/05.04.md)
 3. [字符串全排列](https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/zh/01.06.md)
+4. 斐波拉切数列
+5. [在数组中，寻找和为定值的两个数](#find)  [原文](https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/zh/02.02.md)
 
 
 ### 数据库
 
 1. 索引有哪些分类？创建索引因注意哪些问题？
 2. join有何算法？如何实现的？
-3. 事务有哪些隔离级别？如何防止幻读？
+3. 事物的隔离级别&脏读&不可重复读&幻度 MVCC
 4. 为什么InnoDB中表的主键最好要自增？
 5. datetime、timestamp的区别，如何存储IP地址，如何进行翻页？核心概念
 6. ACID，以及如何确保ACID ,数据库隔离级别，以及每种隔离实现原理；
@@ -72,6 +74,8 @@ description: 面试题
 7. [如何查看一个端口被什么进程占用？](#netstat)
 8. [文件系统软连接和硬连接的区别](#link) 
 9. [写脚本实现，可以用shell、perl等。在目录/tmp下找到100个以abc开头的文件，然后把这些文件的第一行保存到文件new中。](#findFile)
+10. 查看CPU load 及其含义(w, uptime, top, 平均，1min,5min,15min, 等待CPU的平均进程数)
+11. log中查找top10的ip  （uniq -c， awk, tail )
 
 
 
@@ -79,8 +83,7 @@ description: 面试题
 
 <span id = "levenshtein">字符串编辑距离：</span>
 
-{% highlight Java %}
-
+```
 public static int getLevenshteinDistance(String s, String t) {
     if (s == null || t == null) {
         throw new IllegalArgumentException("Strings must not be null");
@@ -139,7 +142,7 @@ public static int getLevenshteinDistance(String s, String t) {
     // actually has the most recent cost counts
     return p[n];
 }
-{% endhighlight %}
+```
 
 <span id = "replacestr">交替字符串：</span>
 
@@ -201,4 +204,15 @@ find /tmp -type f -name “abc*” | head -n 100 | xargs head -q -n 1 >> new
 
 ```
 netstat -tunlp|grep 端口号
+```
+
+
+
+<span id = "find">在数组中，寻找和为定值的两个数</span>
+
+```
+1.两层遍历 时间空间复杂度O(N^2)，O(1)
+2.先排序，逐个二分查找， 复杂度O(NlogN)，O(1)
+3.扫描一遍X-S[i] 映射到一个数组或构造hash表，复杂度为O(N),O(N)
+4.先排序，两个指针两端扫描, 复杂度O(NlogN)，O(1)
 ```
