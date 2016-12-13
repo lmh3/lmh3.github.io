@@ -22,7 +22,7 @@ Apache Thrift官方的Python Tutorial: https://thrift.apache.org/tutorial/py
 
 #### Python client
 
-```
+{% highlight Python %}
 #coding=utf-8
 import sys
 import glob
@@ -58,7 +58,7 @@ def test():
  
 if __name__ == '__main__':
     test()
-```
+{% endhighlight %}
 
 #### 执行Python client
 `python client.py`
