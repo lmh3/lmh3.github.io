@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Mac安装0.8版本的Thrift 
+title: Mac安装老版本的Thrift 
 categories: Thrift
 tags:
 - Thrift
@@ -11,6 +11,7 @@ description: Mac安装老版本的Thrift
 Thrift是一个常用的RPC框架，现要安装比较老的0.8.0版本。
 
 版本0.8.0的下载地址：
+
 ```
 http://archive.apache.org/dist/thrift/0.8.0/
 ```
@@ -24,16 +25,21 @@ http://archive.apache.org/dist/thrift/0.8.0/
 ```
 
 然后：
+
 ```
 make && sudo make install
 ```
 
 执行：
+
 ```
 thrift -version
 ```
+
 显示：
+
 ```
 Thrift version 0.8.0
 ```
+
 安装成功。
