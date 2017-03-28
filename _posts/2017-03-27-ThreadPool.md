@@ -146,7 +146,166 @@ public void execute(Runnable command) {
     }
 ```
 
-#### 四、Excutors
+#### 四、ScheduledThreadPoolExecutor
+
+* `ScheduledThreadPoolExecutor`
+
+```
+java.util.concurrent
+Class ScheduledThreadPoolExecutor
+
+继承自：
+java.lang.Object
+java.util.concurrent.AbstractExecutorService
+java.util.concurrent.ThreadPoolExecutor
+java.util.concurrent.ScheduledThreadPoolExecutor
+
+实现的借口
+Executor, ExecutorService, ScheduledExecutorService
+```
+
+ScheduledThreadPoolExecutor实现了一个可以定期执行的线程池。
+
+* `构造函数`
+
+```
+public ScheduledThreadPoolExecutor(int corePoolSize) {
+        super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+              new DelayedWorkQueue());
+}
+
+public ScheduledThreadPoolExecutor(int corePoolSize,
+                                       ThreadFactory threadFactory) {
+        super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+              new DelayedWorkQueue(), threadFactory);
+}
+```
+
+从构造函数可以看出，ScheduledThreadPoolExecutor是使用固定corePoolSize和无界队列的固定大小的线程池。所以maximumPoolSize没有意义。
+
+* `execute & submit`
+
+```
+	public void execute(Runnable command) {
+        schedule(command, 0, NANOSECONDS);
+    }
+    
+    
+   public Future<?> submit(Runnable task) {
+        return schedule(task, 0, NANOSECONDS);
+    }
+
+    /**
+     * @throws RejectedExecutionException {@inheritDoc}
+     * @throws NullPointerException       {@inheritDoc}
+     */
+    public <T> Future<T> submit(Runnable task, T result) {
+        return schedule(Executors.callable(task, result), 0, NANOSECONDS);
+    }
+
+    /**
+     * @throws RejectedExecutionException {@inheritDoc}
+     * @throws NullPointerException       {@inheritDoc}
+     */
+    public <T> Future<T> submit(Callable<T> task) {
+        return schedule(task, 0, NANOSECONDS);
+    }
+```
+
+ScheduledThreadPoolExecutor重写了execute和submit方法，生成了delay为0的延迟任务。
+
+* `schedule`
+
+```
+    /**
+     * @throws RejectedExecutionException {@inheritDoc}
+     * @throws NullPointerException       {@inheritDoc}
+     */
+    public ScheduledFuture<?> schedule(Runnable command,
+                                       long delay,
+                                       TimeUnit unit) {
+        if (command == null || unit == null)
+            throw new NullPointerException();
+        RunnableScheduledFuture<?> t = decorateTask(command,
+            new ScheduledFutureTask<Void>(command, null,
+                                          triggerTime(delay, unit)));
+        delayedExecute(t);
+        return t;
+    }
+
+    /**
+     * @throws RejectedExecutionException {@inheritDoc}
+     * @throws NullPointerException       {@inheritDoc}
+     */
+    public <V> ScheduledFuture<V> schedule(Callable<V> callable,
+                                           long delay,
+                                           TimeUnit unit) {
+        if (callable == null || unit == null)
+            throw new NullPointerException();
+        RunnableScheduledFuture<V> t = decorateTask(callable,
+            new ScheduledFutureTask<V>(callable,
+                                       triggerTime(delay, unit)));
+        delayedExecute(t);
+        return t;
+    }
+
+```
+
+schedule防范，创建并执行在给定延迟后启用的 ScheduledFuture。
+
+* `scheduleAtFixedRate`
+
+```
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
+                                                  long initialDelay,
+                                                  long period,
+                                                  TimeUnit unit) {
+        if (command == null || unit == null)
+            throw new NullPointerException();
+        if (period <= 0)
+            throw new IllegalArgumentException();
+        ScheduledFutureTask<Void> sft =
+            new ScheduledFutureTask<Void>(command,
+                                          null,
+                                          triggerTime(initialDelay, unit),
+                                          unit.toNanos(period));
+        RunnableScheduledFuture<Void> t = decorateTask(command, sft);
+        sft.outerTask = t;
+        delayedExecute(t);
+        return t;
+    }
+ ```
+ 创建一个在initialDelay后初次执行，之后每隔period执行一次的定时任务。
+ 
+ * `scheduleWithFixedDelay`
+
+ ```
+     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
+                                                     long initialDelay,
+                                                     long delay,
+                                                     TimeUnit unit) {
+        if (command == null || unit == null)
+            throw new NullPointerException();
+        if (delay <= 0)
+            throw new IllegalArgumentException();
+        ScheduledFutureTask<Void> sft =
+            new ScheduledFutureTask<Void>(command,
+                                          null,
+                                          triggerTime(initialDelay, unit),
+                                          unit.toNanos(-delay));
+        RunnableScheduledFuture<Void> t = decorateTask(command, sft);
+        sft.outerTask = t;
+        delayedExecute(t);
+        return t;
+    }
+```
+
+创建一个initialDelay后初次执行，随后，在每一次执行终止和下一次执行开始之间都存在给定的delay的任务。scheduleWithFixedDelay是当前一个任务结束的时刻，开始结算间隔时间。
+
+通过ScheduledExecutorService执行的周期任务，如果任务执行过程中抛出了异常，那么过ScheduledExecutorService就会停止执行任务，且也不会再周期地执行该任务了。所以你如果想保住任务都一直被周期执行，那么catch一切可能的异常。
+
+
+#### 五、Excutors
 
 Excutors是线程池的工厂类，常用的有：
 
@@ -184,4 +343,22 @@ public static ExecutorService newFixedThreadPool(int nThreads) {
 ```
 固定大小的线程池。corePoolSize和maximumPoolSize相同，都为固定值。永不过期，无界队列。
 
+* `newSingleThreadScheduledExecutor`
 
+```
+public static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory) {
+        return new DelegatedScheduledExecutorService
+            (new ScheduledThreadPoolExecutor(1, threadFactory));
+    }
+```
+单线程的定时任务线程池。
+
+* `newScheduledThreadPool`
+
+```
+public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
+        return new ScheduledThreadPoolExecutor(corePoolSize);
+    }
+```
+
+固定corePoolSize的定时任务线程池。使用无界队列。
